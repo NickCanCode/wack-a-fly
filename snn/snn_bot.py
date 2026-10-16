@@ -1,7 +1,7 @@
 import time
 import numpy as np
 import pyautogui
-import snn_core                      # brain file
+import snn.snn_core as snn_core                      # brain file
 
 scale = pyautogui.screenshot().width / pyautogui.size().width   # same as YOLO
 
