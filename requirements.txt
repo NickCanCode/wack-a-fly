@@ -1,0 +1,5 @@
+pyserial
+numpy
+pyautogui
+opencv-python
+inference-sdk
