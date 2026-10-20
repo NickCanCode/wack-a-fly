@@ -12,6 +12,8 @@ if PORT == "auto":
              if "usbmodem" in p.device or "usbserial" in p.device]
     if not found:
         raise SystemExit("No Arduino found. Plug it in (ls /dev/cu.*) or set PORT = None.")
+    if len(found) > 1:
+        raise SystemExit(f"More than one Arduino: {found}. Set PORT at the top to the board one.")
     PORT = found[0]
     print(f"Using {PORT}")
 
