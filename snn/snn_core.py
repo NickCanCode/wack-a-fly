@@ -6,10 +6,13 @@ DECAY = 0.8                 # leak: each step a neuron keeps 80% of its charge
 
 v = np.zeros((GRID_H, GRID_W))   # membrane potential ("charge") of every neuron
 prev = None                      # last frame, to compare against
+spikes = np.zeros((GRID_H, GRID_W), dtype=bool)   # which neurons fired on the last step
+events = np.zeros((GRID_H, GRID_W))               # the change each neuron got on the last step
 
-def step(frame_gray):
-    """frame_gray: 2D numpy array (H x W, 0-255). Returns (x, y) to click, or None."""
-    global v, prev
+def step(frame_gray, brighter=False):
+    """frame_gray: 2D numpy array (H x W, 0-255). Returns (x, y) to click, or None.
+    brighter=True reacts to things getting brighter (LEDs) instead of darker (black dots)."""
+    global v, prev, spikes, events
     # 1. Shrink the frame to the neuron grid (average blocks of pixels).
     h, w = frame_gray.shape
     small = frame_gray[: h - h % GRID_H, : w - w % GRID_W]
@@ -21,7 +24,8 @@ def step(frame_gray):
 
     # 2. Events: how much each cell got DARKER since last frame (0 = no change, 1 = white->black).
     #    Unchanged cells give 0, so they cost (almost) nothing. That's the event-driven idea.
-    events = np.clip((prev - small) / 255, 0, 1)
+    change = (small - prev) if brighter else (prev - small)
+    events = np.clip(change / 255, 0, 1)
     prev = small
 
     # 3. Leaky integrate-and-fire: leak a bit, add the input, spike if over threshold.
