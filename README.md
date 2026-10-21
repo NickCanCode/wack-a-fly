@@ -116,7 +116,7 @@ source vn/bin/activate
 pip install -r requirements.txt
 ```
 
-Upload `arduino/board/board.ino` and `arduino/arm/arm.ino` to their Arduinos with the Arduino IDE. Close the Serial Monitor before running any Python, or the port will be busy. If both Arduinos are plugged in, set `PORT` at the top of `game.py` (board) and `arm.py` (arm); `ls /dev/cu.usbmodem*` lists them.
+Upload `arduino/board/board.ino` and `arduino/arm/arm.ino` to their Arduinos with the Arduino IDE. Close the Serial Monitor before running any Python, or the port will be busy. If both Arduinos are plugged in, set `PORT` at the top of `board.py` (board) and `arm.py` (arm); `ls /dev/cu.usbmodem*` lists them.
 
 The YOLO bot needs a Roboflow key: `export ROBOFLOW_API_KEY=your_key_here`
 
@@ -125,8 +125,8 @@ The YOLO bot needs a Roboflow key: `export ROBOFLOW_API_KEY=your_key_here`
 ```bash
 python gui.py              # the main screen
 python camera.py           # check the 9 hole views line up with the board
-python arm.py calibrate    # save the arm position for each hole
-python arm.py test         # hit every saved hole
+python arm.py 4           # hit hole 4
+python arm.py             # hit every hole, 0 to 8
 ```
 
 ### Files
@@ -137,8 +137,8 @@ python arm.py test         # hit every saved hole
 | `yolo/yolo_bot.py` | The YOLO bot |
 | `gui.py` | The screen showing how each model sees the board |
 | `camera.py` | Cuts the camera picture into 9 views, one per hole |
-| `arm.py` | Controls the arm, with a calibrate mode |
-| `game.py` | Simple on-screen version of the game |
+| `arm.py` | Moves the arm to a hole, taps it, checks the magnet sensor. Hole angles are in the `HOLES` list. |
+| `board.py` | Lights the board's LEDs. `python board.py` lights each hole in turn. |
 | `arduino/board/`, `arduino/arm/` | The two Arduino sketches |
 | `arduino/led_test/`, `arduino/servo_check/` | Wiring test sketches |
 
