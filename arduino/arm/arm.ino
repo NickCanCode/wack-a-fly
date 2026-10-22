@@ -45,7 +45,7 @@ void setup() {
   Serial.setTimeout(50);   // don't wait a whole second for more digits after a number
   for (int i = 0; i < 2; i++) {
     servos[i].attach(SERVO_PINS[i]);
-    servos[i].write(pos[i]);
+    servos[i].write(pos[  i]);
   }
   pinMode(HALL_PIN, INPUT_PULLUP);
 }

@@ -4,24 +4,13 @@
 """
 import time
 
-import serial
-import serial.tools.list_ports
+import usb
 
 PORT = "auto"   # "auto" finds the Arduino, or a path like "/dev/cu.usbmodem31101"
 
 
 def connect(port=PORT):
-    if port == "auto":
-        found = [p.device for p in serial.tools.list_ports.comports()
-                 if "usbmodem" in p.device or "usbserial" in p.device]
-        if not found:
-            raise SystemExit("No Arduino found. Plug it in (ls /dev/cu.*).")
-        if len(found) > 1:
-            raise SystemExit(f"More than one Arduino: {found}. Set PORT at the top to the board one.")
-        port = found[0]
-    conn = serial.Serial(port, 9600)
-    time.sleep(2)   # Arduino restarts when connected, wait for it
-    return conn
+    return usb.connect(port, "board")
 
 
 def light(conn, hole):

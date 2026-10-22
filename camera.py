@@ -3,6 +3,7 @@ import numpy as np
 
 CAMERA = 0  # 0 = Mac's built-in camera; try 1 or 2 for a USB camera or iPhone
 BOX = 80     # size of the square cut out around each hole
+SIZE = 192   # each cut-out square is zoomed up to SIZE x SIZE
 
 # Where each hole is in the camera picture (x, y). Hole 0 first, hole 8 last.
 # Change these to match your board.
@@ -18,8 +19,13 @@ def split(frame):
     holes = []
     for x, y in HOLES:
         crop = frame[y - BOX // 2 : y + BOX // 2, x - BOX // 2 : x + BOX // 2]
-        holes.append(cv2.resize(crop, (160, 160)))
+        holes.append(cv2.resize(crop, (SIZE, SIZE)))
     return holes
+
+
+def grid(holes):
+    """Glue the 9 hole squares into one 3x3 picture, laid out like the board."""
+    return np.vstack([np.hstack(holes[0:3]), np.hstack(holes[3:6]), np.hstack(holes[6:9])])
 
 
 if __name__ == "__main__":
@@ -32,9 +38,8 @@ if __name__ == "__main__":
         holes = split(frame)
 
         # show all 9 hole frames in a 3x3 grid, in black and white
-        grid = np.vstack([np.hstack(holes[0:3]), np.hstack(holes[3:6]), np.hstack(holes[6:9])])
         #makes it gray
-        gray = cv2.cvtColor(grid, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(grid(holes), cv2.COLOR_BGR2GRAY)
         #makes it blurry and then makes it black and white
         gray = cv2.GaussianBlur(gray, (11, 11), 0)
         #makes only the bright part stay (light thresholding)

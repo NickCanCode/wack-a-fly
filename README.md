@@ -76,7 +76,7 @@ That last row surprises people: once the LED has been on for a moment, the SNN s
 
 ## What you see in the GUI
 
-Run `python gui.py` and use the switch to flip between the two.
+Run `python main.py` and use the switch to pick which model plays. (`python gui.py` shows the same screen without the game, no Arduinos needed.)
 
 - **SNN view:** the camera on the left, and on the right a black grid of neurons. **Red** is an event (that spot changed). **White** is a spike. When an LED turns on you'll see a flash of red and white, then it fades back to black even though the LED is still lit.
 - **YOLO view:** the camera next to the full picture, because that's what YOLO takes in every frame.
@@ -123,7 +123,8 @@ The YOLO bot needs a Roboflow key: `export ROBOFLOW_API_KEY=your_key_here`
 ### Commands
 
 ```bash
-python gui.py              # the main screen
+python main.py             # the game: screen, board, camera, models and arm together
+python gui.py              # just the screen, no Arduinos needed
 python camera.py           # check the 9 hole views line up with the board
 python arm.py 4           # hit hole 4
 python arm.py             # hit every hole, 0 to 8
@@ -135,15 +136,18 @@ python arm.py             # hit every hole, 0 to 8
 |---|---|
 | `snn/snn_core.py` | The spiking neural network (the steps above) |
 | `yolo/yolo_bot.py` | The YOLO bot |
+| `main.py` | The game: lights a hole, lets the model on the switch find it, hits it with the arm, keeps score |
 | `gui.py` | The screen showing how each model sees the board |
 | `camera.py` | Cuts the camera picture into 9 views, one per hole |
 | `arm.py` | Moves the arm to a hole, taps it, checks the magnet sensor. Hole angles are in the `HOLES` list. |
 | `board.py` | Lights the board's LEDs. `python board.py` lights each hole in turn. |
+| `usb.py` | Opens the USB connection to an Arduino (used by `board.py` and `arm.py`) |
+| `old/gui_minecraft.py` | Saved Minecraft-styled version of the screen, not used by the game |
 | `arduino/board/`, `arduino/arm/` | The two Arduino sketches |
 | `arduino/led_test/`, `arduino/servo_check/` | Wiring test sketches |
 
 ### Status
 
-Working: LEDs, servos, camera split, GUI with the SNN view.
+Working: LEDs, servos, camera split, GUI with the SNN view, the game loop in `main.py`.
 
-Still to do: the game loop that ties the board, camera, models and arm together and fills in the score table, and a YOLO model trained on photos of the board. Right now the YOLO side of the GUI is a stand-in that picks the brightest hole.
+Still to do: a YOLO model trained on photos of the board. Right now the YOLO side of the GUI is a stand-in that picks the brightest hole.
